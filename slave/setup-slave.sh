@@ -1,14 +1,17 @@
 #!/bin/bash
+# echo "*:*:*:$PG_REP_USER:$PG_REP_PASSWORD" > ~/.pgpass
+# chmod 0600 ~/.pgpass
 
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
 	echo "*:*:*:$PG_REP_USER:$PG_REP_PASSWORD" > ~/.pgpass
 	chmod 0600 ~/.pgpass
+	# export PGPASSFILE=~/.pgpass
 	until ping -c 1 -W 1 pg_master_1
 	do
 		echo "Waiting for master to ping..."
 		sleep 1s
 	done
-	until pg_basebackup -h pg_master_1 -D ${PGDATA} -U ${PG_REP_USER} -vP -W
+	until echo $PG_REP_PASSWORD|pg_basebackup -R -h pg_master_1 -D ${PGDATA} -U ${PG_REP_USER} -vP -W
 	do
 		echo "Waiting for master to connect..."
 		sleep 1s
