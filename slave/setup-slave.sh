@@ -14,14 +14,12 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
 		sleep 1s
 	done
 	echo "host replication all 0.0.0.0/0 md5" >> "$PGDATA/pg_hba.conf"
-	set -e
-	touch ${PGDATA}/standby.signal
-	cat >> ${PGDATA}/postgresql.conf <<EOF
-	# standby_mode = on
-	hot_standby = on
-	primary_conninfo = 'host=pg_master_1 port=5432 user=$PG_REP_USER password=$PG_REP_PASSWORD'
+#	set -e
+#	cat >${PGDATA}/reconvery.conf <<EOF
+# 	standby_mode = on
+#	primary_conninfo = 'host=pg_master_1 port=5432 user=$PG_REP_USER password=$PG_REP_PASSWORD'
 	# trigger_file = '/tmp/touch_me_to_promote_to_me_master'
-EOF
+#EOF
 	chown postgres. ${PGDATA} -R
 	chmod 700 ${PGDATA} -R
 fi
